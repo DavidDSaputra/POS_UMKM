@@ -1,6 +1,188 @@
 @extends('layouts.pos')
 
 @section('content')
+
+{{-- CSS Styles --}}
+    <style>
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+            padding: 10px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 280px; /* Fixed height */
+            overflow: hidden;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+
+        .product-card.out-of-stock {
+            opacity: 0.7;
+        }
+
+        .product-card.out-of-stock:hover {
+            transform: none;
+            cursor: not-allowed;
+        }
+
+        .product-image-container {
+            height: 150px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.05);
+        }
+
+        .product-image-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: #6c757d;
+        }
+
+        .product-info {
+            padding: 15px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 8px;
+            line-height: 1.3;
+            height: 36px;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .product-details {
+            margin-top: auto;
+        }
+
+        .product-price {
+            font-weight: 700;
+            font-size: 16px;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .product-stock-info {
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+        }
+
+        .stock-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            z-index: 2;
+        }
+
+        .out-of-stock-badge {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .low-stock-badge {
+            background-color: #ffc107;
+            color: #212529;
+        }
+
+        .stock-available {
+            color: #28a745;
+        }
+
+        .stock-low {
+            color: #fd7e14;
+        }
+
+        .stock-unlimited {
+            color: #17a2b8;
+        }
+
+        .product-stock-info i {
+            margin-right: 4px;
+            font-size: 11px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 10px;
+            }
+
+            .product-card {
+                height: 250px;
+            }
+
+            .product-image-container {
+                height: 130px;
+            }
+
+            .product-name {
+                font-size: 13px;
+                height: 32px;
+            }
+
+            .product-price {
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            }
+
+            .product-card {
+                height: 230px;
+            }
+
+            .product-image-container {
+                height: 120px;
+            }
+        }
+    </style>
+
     <div class="pos-container">
         <!-- Left Panel - Cart -->
         <div class="cart-panel">
@@ -154,22 +336,64 @@
 
             <div class="products-grid" id="productsGrid">
                 @foreach($products as $product)
-                    <div class="product-card {{ !$product->isInStock() ? 'out-of-stock' : '' }}" data-id="{{ $product->id }}"
-                        data-name="{{ $product->name }}" data-price="{{ $product->price }}" data-stock="{{ $product->stock }}">
-                        <div class="product-image">
+                    <div class="product-card {{ !$product->isInStock() ? 'out-of-stock' : '' }}" 
+                        data-id="{{ $product->id }}"
+                        data-name="{{ $product->name }}" 
+                        data-price="{{ $product->price }}" 
+                        data-stock="{{ $product->stock }}">
+                        
+                        <div class="product-image-container">
                             @if($product->image)
-                                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}">
+                                <img src="{{ asset('storage/' . $product->image) }}" 
+                                    alt="{{ $product->name }}"
+                                    class="product-image">
                             @else
-                                <i class="fas fa-utensils"></i>
+                                <div class="product-image-placeholder">
+                                    <i class="fas fa-utensils"></i>
+                                </div>
+                            @endif
+                            
+                            {{-- Badge Stok Habis --}}
+                            @if(!$product->isInStock())
+                                <div class="stock-badge out-of-stock-badge">
+                                    <i class="fas fa-times-circle"></i> Stok Habis
+                                </div>
+                            @elseif($product->stock !== null && $product->stock <= 10 && $product->stock > 0)
+                                <div class="stock-badge low-stock-badge">
+                                    <i class="fas fa-exclamation-triangle"></i> Stok: {{ $product->stock }}
+                                </div>
                             @endif
                         </div>
+                        
                         <div class="product-info">
-                            <div class="product-name">{{ $product->name }}</div>
-                            <div class="product-price">{{ $product->formatted_price }}</div>
-                            @if($product->stock !== null && $product->stock <= 10 && $product->stock > 0)
-                                <small class="text-warning"><i class="fas fa-exclamation-triangle"></i> Stok:
-                                    {{ $product->stock }}</small>
-                            @endif
+                            <div class="product-name" title="{{ $product->name }}">
+                                {{ Str::limit($product->name, 20) }}
+                            </div>
+                            
+                            <div class="product-details">
+                                <div class="product-price">{{ $product->formatted_price }}</div>
+                                
+                                {{-- Info Stok Tambahan --}}
+                                @if($product->stock !== null)
+                                    <div class="product-stock-info">
+                                        @if($product->stock > 10)
+                                            <span class="stock-available">
+                                                <i class="fas fa-check-circle"></i> Stok: {{ $product->stock }}
+                                            </span>
+                                        @elseif($product->stock > 0 && $product->stock <= 10)
+                                            <span class="stock-low">
+                                                <i class="fas fa-exclamation-triangle"></i> Sisa: {{ $product->stock }}
+                                            </span>
+                                        @endif
+                                    </div>
+                                @else
+                                    <div class="product-stock-info">
+                                        <span class="stock-unlimited">
+                                            <i class="fas fa-infinity"></i> Stok Tersedia
+                                        </span>
+                                    </div>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 @endforeach
