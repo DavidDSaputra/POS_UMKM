@@ -1,0 +1,33 @@
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+class RoleMiddleware
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     */
+    public function handle(Request $request, Closure $next, string $role): Response
+    {
+        if (!auth()->check()) {
+            return redirect()->route('login');
+        }
+
+        if (auth()->user()->role !== $role) {
+            // If owner tries to access kasir routes, allow it
+            if ($role === 'kasir' && auth()->user()->role === 'owner') {
+                return $next($request);
+            }
+
+            abort(403, 'Unauthorized access.');
+        }
+
+        return $next($request);
+    }
+}
