@@ -13,200 +13,142 @@ class ProductSeeder extends Seeder
      */
     public function run(): void
     {
+        // Hapus data lama jika perlu (optional)
+        // Product::truncate();
+        
         $categories = Category::all()->keyBy('slug');
-
-        $products = [
-            // Minuman Panas
-            [
-                'category_slug' => 'minuman-panas',
-                'name' => 'Kopi Hitam',
-                'price' => 8000,
-                'is_active' => true,
+        
+        // Data template produk per kategori
+        $productTemplates = [
+            'minuman-panas' => [
+                ['Kopi Hitam', 8000],
+                ['Kopi Susu', 12000],
+                ['Teh Panas', 5000],
+                ['Teh Tarik', 10000],
+                ['Coklat Panas', 12000],
+                ['Cappuccino', 15000],
+                ['Latte', 18000],
+                ['Espresso', 10000],
+                ['Macchiato', 13000],
+                ['Americano', 9000],
+                ['Mocha', 16000],
+                ['Matcha Latte', 17000],
+                ['Red Velvet Latte', 20000],
+                ['Hazelnut Coffee', 16000],
+                ['Caramel Macchiato', 18000],
             ],
-            [
-                'category_slug' => 'minuman-panas',
-                'name' => 'Kopi Susu',
-                'price' => 12000,
-                'is_active' => true,
+            'minuman-dingin' => [
+                ['Es Kopi Susu', 15000],
+                ['Es Teh Manis', 6000],
+                ['Es Jeruk', 8000],
+                ['Es Coklat', 14000],
+                ['Jus Alpukat', 15000],
+                ['Jus Mangga', 12000],
+                ['Jus Strawberry', 13000],
+                ['Jus Melon', 10000],
+                ['Smoothie Berry', 18000],
+                ['Smoothie Banana', 16000],
+                ['Milk Shake Coklat', 20000],
+                ['Thai Tea', 15000],
+                ['Es Taro', 17000],
+                ['Es Kelapa Muda', 15000],
+                ['Es Campur', 12000],
             ],
-            [
-                'category_slug' => 'minuman-panas',
-                'name' => 'Teh Panas',
-                'price' => 5000,
-                'is_active' => true,
+            'makanan-berat' => [
+                ['Nasi Goreng Spesial', 20000],
+                ['Nasi Goreng Telur', 15000],
+                ['Mie Goreng', 15000],
+                ['Mie Rebus', 15000],
+                ['Indomie Goreng', 10000],
+                ['Indomie Rebus', 10000],
+                ['Nasi Goreng Seafood', 25000],
+                ['Nasi Goreng Ayam', 18000],
+                ['Mie Goreng Seafood', 22000],
+                ['Nasi Ayam Penyet', 22000],
+                ['Nasi Soto Ayam', 20000],
+                ['Nasi Rawon', 25000],
+                ['Nasi Gudeg', 22000],
+                ['Nasi Padang', 25000],
+                ['Mie Ayam', 15000],
             ],
-            [
-                'category_slug' => 'minuman-panas',
-                'name' => 'Teh Tarik',
-                'price' => 10000,
-                'is_active' => true,
+            'snack' => [
+                ['Kentang Goreng', 15000],
+                ['Pisang Goreng', 10000],
+                ['Tahu Crispy', 8000],
+                ['Tempe Mendoan', 8000],
+                ['Cireng', 10000],
+                ['Batagor', 15000],
+                ['Siomay', 18000],
+                ['Risol Mayo', 12000],
+                ['Martabak Mini', 15000],
+                ['Donat', 8000],
+                ['Nugget Ayam', 15000],
+                ['Sosis Goreng', 10000],
+                ['Chicken Wings', 25000],
+                ['Cheese Stick', 15000],
+                ['Popcorn Chicken', 18000],
             ],
-            [
-                'category_slug' => 'minuman-panas',
-                'name' => 'Coklat Panas',
-                'price' => 12000,
-                'is_active' => true,
-            ],
-            [
-                'category_slug' => 'minuman-panas',
-                'name' => 'Cappuccino',
-                'price' => 15000,
-                'is_active' => true,
-            ],
-
-            // Minuman Dingin
-            [
-                'category_slug' => 'minuman-dingin',
-                'name' => 'Es Kopi Susu',
-                'price' => 15000,
-                'is_active' => true,
-            ],
-            [
-                'category_slug' => 'minuman-dingin',
-                'name' => 'Es Teh Manis',
-                'price' => 6000,
-                'is_active' => true,
-            ],
-            [
-                'category_slug' => 'minuman-dingin',
-                'name' => 'Es Jeruk',
-                'price' => 8000,
-                'is_active' => true,
-            ],
-            [
-                'category_slug' => 'minuman-dingin',
-                'name' => 'Es Coklat',
-                'price' => 14000,
-                'is_active' => true,
-            ],
-            [
-                'category_slug' => 'minuman-dingin',
-                'name' => 'Jus Alpukat',
-                'price' => 15000,
-                'is_active' => true,
-            ],
-            [
-                'category_slug' => 'minuman-dingin',
-                'name' => 'Jus Mangga',
-                'price' => 12000,
-                'is_active' => true,
-            ],
-
-            // Makanan Berat
-            [
-                'category_slug' => 'makanan-berat',
-                'name' => 'Nasi Goreng Spesial',
-                'price' => 20000,
-                'is_active' => true,
-            ],
-            [
-                'category_slug' => 'makanan-berat',
-                'name' => 'Nasi Goreng Telur',
-                'price' => 15000,
-                'is_active' => true,
-            ],
-            [
-                'category_slug' => 'makanan-berat',
-                'name' => 'Mie Goreng',
-                'price' => 15000,
-                'is_active' => true,
-            ],
-            [
-                'category_slug' => 'makanan-berat',
-                'name' => 'Mie Rebus',
-                'price' => 15000,
-                'is_active' => true,
-            ],
-            [
-                'category_slug' => 'makanan-berat',
-                'name' => 'Indomie Goreng',
-                'price' => 10000,
-                'is_active' => true,
-            ],
-            [
-                'category_slug' => 'makanan-berat',
-                'name' => 'Indomie Rebus',
-                'price' => 10000,
-                'is_active' => true,
-            ],
-
-            // Snack
-            [
-                'category_slug' => 'snack',
-                'name' => 'Kentang Goreng',
-                'price' => 15000,
-                'is_active' => true,
-            ],
-            [
-                'category_slug' => 'snack',
-                'name' => 'Pisang Goreng',
-                'price' => 10000,
-                'stock' => 20,
-                'is_active' => true,
-            ],
-            [
-                'category_slug' => 'snack',
-                'name' => 'Tahu Crispy',
-                'price' => 8000,
-                'stock' => 15,
-                'is_active' => true,
-            ],
-            [
-                'category_slug' => 'snack',
-                'name' => 'Tempe Mendoan',
-                'price' => 8000,
-                'stock' => 15,
-                'is_active' => true,
-            ],
-            [
-                'category_slug' => 'snack',
-                'name' => 'Cireng',
-                'price' => 10000,
-                'stock' => 10,
-                'is_active' => true,
-            ],
-
-            // Roti & Kue
-            [
-                'category_slug' => 'roti-kue',
-                'name' => 'Roti Bakar Coklat',
-                'price' => 12000,
-                'is_active' => true,
-            ],
-            [
-                'category_slug' => 'roti-kue',
-                'name' => 'Roti Bakar Keju',
-                'price' => 15000,
-                'is_active' => true,
-            ],
-            [
-                'category_slug' => 'roti-kue',
-                'name' => 'Roti Bakar Strawberry',
-                'price' => 12000,
-                'is_active' => true,
-            ],
-            [
-                'category_slug' => 'roti-kue',
-                'name' => 'Pancake',
-                'price' => 18000,
-                'is_active' => true,
-            ],
-            [
-                'category_slug' => 'roti-kue',
-                'name' => 'Waffle',
-                'price' => 20000,
-                'is_active' => true,
+            'roti-kue' => [
+                ['Roti Bakar Coklat', 12000],
+                ['Roti Bakar Keju', 15000],
+                ['Roti Bakar Strawberry', 12000],
+                ['Pancake', 18000],
+                ['Waffle', 20000],
+                ['Roti Bakar Nutella', 22000],
+                ['Crepes Coklat', 15000],
+                ['Brownies', 15000],
+                ['Muffin Coklat', 12000],
+                ['Croissant', 15000],
+                ['Donat Coklat', 10000],
+                ['Bagel', 15000],
+                ['Toast Avocado', 18000],
+                ['French Toast', 20000],
+                ['Banana Bread', 15000],
             ],
         ];
-
-        foreach ($products as $product) {
-            $categorySlug = $product['category_slug'];
-            unset($product['category_slug']);
-
-            if (isset($categories[$categorySlug])) {
-                $product['category_id'] = $categories[$categorySlug]->id;
-                Product::create($product);
+        
+        $variations = ['Spesial', 'Premium', 'Original', 'Deluxe', 'Extra', 'Gold', 'Special', 'Super'];
+        $imagePath = 'products/a3F11DGsqXBBvrNp7StgfiqNGYoJ8Dxi9e6ICry6.jpg';
+        
+        $products = [];
+        $count = 0;
+        
+        while ($count < 100) {
+            foreach ($categories as $slug => $category) {
+                if (!isset($productTemplates[$slug])) continue;
+                
+                $templates = $productTemplates[$slug];
+                $template = $templates[array_rand($templates)];
+                
+                $variation = $variations[array_rand($variations)];
+                $productName = $template[0] . ' ' . $variation;
+                
+                // Random harga ±15%
+                $basePrice = $template[1];
+                $variationPercent = rand(-15, 15) / 100;
+                $price = round($basePrice * (1 + $variationPercent) / 500) * 500;
+                
+                // Untuk snack, beri stock random, untuk lainnya null
+                $stock = null;
+                
+                $products[] = [
+                    'category_id' => $category->id,
+                    'name' => $productName,
+                    'price' => $price,
+                    'stock' => $stock,
+                    'image' => $imagePath,
+                    'description' => 'Deskripsi untuk ' . $productName,
+                    'is_active' => true,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+                
+                $count++;
+                if ($count >= 100) break 2;
             }
         }
+        
+        Product::insert($products);
+        $this->command->info("✅ Berhasil menambahkan {$count} produk dummy dengan gambar!");
     }
 }
